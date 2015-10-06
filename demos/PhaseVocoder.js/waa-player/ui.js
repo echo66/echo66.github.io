@@ -1,14 +1,14 @@
-function WAAPlayerUI(id, title, player, gain) {
+function WAAPlayerUI(id, title, player, gain, recorder) {
 
-	/*
-     *	COMPONENTES: 
-     *		(1) SLIDER PARA A VELOCIDADE.
-     *		(2) SLIDER PARA O GANHO.
-     *		(3) WAVEFORM
-     *  	(4) BOTÃO PARA ELIMINAR O PLAYER
-     *		(5) BOTÃO PARA STOP
-     *		(6) BOTÃO PARA PLAY
-     *		(7) TÍTULO
+    /*
+     *  COMPONENTES: 
+     *      (1) SLIDER PARA A VELOCIDADE.
+     *      (2) SLIDER PARA O GANHO.
+     *      (3) WAVEFORM
+     *      (4) BOTÃO PARA ELIMINAR O PLAYER
+     *      (5) BOTÃO PARA STOP
+     *      (6) BOTÃO PARA PLAY
+     *      (7) TÍTULO
      */
 
     var _playerId = id;
@@ -16,20 +16,22 @@ function WAAPlayerUI(id, title, player, gain) {
     var _gain = gain;
     var _title = title;
     var _that = this;
+    var _recorder = recorder;
 
 
-
+    /*************** MAIN DIV ******************/
     var _playerDiv = document.createElement('div');
     _playerDiv.id = 'player-' + _playerId;
     _playerDiv.classList.add('player-container');
+    /*******************************************/
 
 
-
+    /*********** TEMPO INPUT SLIDER ************/
     var _tempoSlider = document.createElement('input');
     _tempoSlider.id = 'tempo-control-' + _playerId;
     _tempoSlider.name = _tempoSlider.id;
     _tempoSlider.type = 'range';
-    _tempoSlider.max = 1.5;
+    _tempoSlider.max = 2;
     _tempoSlider.min = 0.5;
     _tempoSlider.step = 0.01;
     _player.speed = 1;
@@ -43,13 +45,15 @@ function WAAPlayerUI(id, title, player, gain) {
     _tempoValue.innerHTML = _player.speed;
 
     _tempoSlider.oninput = function() {
-    	_player.speed = document.getElementById('tempo-control-' + _playerId).value;
-    	_tempoValue.innerHTML = _player.speed;
+        _player.speed = document.getElementById('tempo-control-' + _playerId).value;
+        _tempoValue.innerHTML = _player.speed;
     };
 
     var _tempoDiv = document.createElement('div');
+    /*******************************************/
 
 
+    /*********** GAIN INPUT SLIDER *************/
     var _gainSlider = document.createElement('input');
     _gainSlider.id = 'gain-control-' + _playerId;
     _gainSlider.name = _gainSlider.id;
@@ -69,37 +73,72 @@ function WAAPlayerUI(id, title, player, gain) {
     _gainValue.innerHTML = _gain.gain.value;
 
     _gainSlider.oninput = function() {
-    	_gain.gain.value = document.getElementById('gain-control-' + _playerId).value;
-    	_gainValue.innerHTML = _gain.gain.value;
+        _gain.gain.value = document.getElementById('gain-control-' + _playerId).value;
+        _gainValue.innerHTML = _gain.gain.value;
     };
 
-
     var _gainDiv = document.createElement('div');
+    /***********************************************/
 
 
-
+    /**************** PLAY BUTTON ******************/
     var _playButton = document.createElement('button');
     _playButton.innerHTML = "Play";
     _playButton.onclick = function() {
-    	_player.play();
+        _player.play();
     };
+    /***********************************************/
 
+    /**************** STOP BUTTON ******************/
     var _stopButton = document.createElement('button');
     _stopButton.innerHTML = "Stop";
     _stopButton.onclick = function() {
-    	_player.stop();
+        _player.stop();
     }
+    /***********************************************/
 
+    /*************** CLOSE BUTTON ******************/
     var _closeButton = document.createElement('button');
     _closeButton.innerHTML = "Close";
     _closeButton.onclick = function() {
-    	_playerDiv.remove();
-    	_that.removeCallback();
+        _playerDiv.remove();
+        _that.removeCallback();
     }
+    /***********************************************/
+
+    /*************** RECORD BUTTON *****************/
+    var _recordButton = document.createElement('button');
+    var _isRecording = false;
+    _recordButton.innerHTML = "Start Record";
+    _recordButton.onclick = function() {
+        if (_isRecording) {
+            _recordButton.innerHTML = "Start Record";
+            _isRecording = false;
+            recorder.stop();
+            recorder.exportWAV(function(blob) {
+                var url = URL.createObjectURL(blob);
+                window.open(url);
+            });
+        } else {
+            _recordButton.innerHTML = "Stop Record";
+            _isRecording = true;
+            recorder.record();
+        }
+    }
+    /***********************************************/
 
 
+    /****************** WAVEFORM *******************/
+    
+    /***********************************************/
+
+
+
+    /****************** TITLE **********************/
     var _titleEl = document.createElement('span');
     _titleEl.innerHTML = _title;
+    /***********************************************/
+
 
     _tempoDiv.appendChild(_tempoSliderLabel);
     _tempoDiv.appendChild(_tempoSlider);
@@ -115,6 +154,7 @@ function WAAPlayerUI(id, title, player, gain) {
     _playerDiv.appendChild(_playButton);
     _playerDiv.appendChild(_stopButton);
     _playerDiv.appendChild(_closeButton);
+    _playerDiv.appendChild(_recordButton);
 
     document.body.appendChild(_playerDiv);
 
@@ -123,7 +163,8 @@ function WAAPlayerUI(id, title, player, gain) {
 
 
 
-	
-	this.removeCallback = function() { }
+    
+    this.removeCallback = function() { }
+
 
 }

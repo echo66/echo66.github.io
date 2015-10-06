@@ -6,6 +6,8 @@ function WAAPlayer(audioContext, audioBuffer, frameSize, bufferSize) {
   
   var _pv = new BufferedPV(frameSize);
 
+  var _audioBuffer = audioBuffer;
+
   _pv.set_audio_buffer(audioBuffer);
 
   var _newAlpha = 1;
@@ -68,6 +70,11 @@ function WAAPlayer(audioContext, audioBuffer, frameSize, bufferSize) {
     'context' : {
       get : function() {
         return _audioCtx;
+      }
+    },
+    'audioBuffer' : {
+      get : function() {
+        return _audioBuffer;
       }
     }
   })
