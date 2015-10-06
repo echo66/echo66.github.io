@@ -50,7 +50,10 @@ var add_player = function(title, decodedData) {
   var id = playersIdCounter++;
   var player = new WAAPlayer(context, decodedData, FRAME_SIZE, BUFFER_SIZE);
   var gain = context.createGain();
-  var ui = new WAAPlayerUI(id, title, player, gain);
+  var recorder;
+  recorder = new Recorder(gain, { workerPath: 'recorderWorker.js' });
+
+  var ui = new WAAPlayerUI(id, title, player, gain, recorder);
   ui.removeCallback = function() {
     player.disconnect();
     gain.disconnect();
