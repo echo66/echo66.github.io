@@ -16,6 +16,7 @@
       </style>
   </head>
   <body>
+    <div id="remote-files"></div>
     <div id="drag-and-drop" class="drag-and-drop">drag an audio file in here</div>
 
     <script type="text/javascript" src="cbuffer.js"></script>
@@ -24,85 +25,7 @@
     <script type="text/javascript" src="waa-player/player.js"></script>
     <script type="text/javascript" src="waa-player/ui.js"></script>
     <script type="text/javascript" src="drag-and-drop.js"></script>
-    <script type="text/javascript">
-
-      var context = new AudioContext();
-
-      var BUFFER_SIZE = 4096;
-      var FRAME_SIZE  = 4096;
-
-      var players = [];
-      var playersIdCounter = 0;
-
-      var load_remote_audio = function(url) {
-        var request = new XMLHttpRequest();
-        request.open('GET', url, true);
-        request.responseType = 'arraybuffer';
-
-        request.onload = function() {
-            context.decodeAudioData(request.response, function(decodedData) {
-              add_player(request.responseURL, decodedData);
-            });
-        };
-        request.send();
-      };
-
-      var load_local_audio = function(e) {
-        if (e.dataTransfer.files.length) {
-
-                // Create file reader
-                var reader = new FileReader();
-                reader.addEventListener('progress', function (e) {
-                    console.log(e);
-                });
-                reader.addEventListener('load', function (e) {
-                    context.decodeAudioData(e.target.result, function(decodedData) {
-                      add_player(filename, decodedData);
-                    });
-                });
-                reader.addEventListener('error', function () {
-                    alert('Error reading file');
-                    console.error('Error reading file');
-                });
-
-                var filename = e.dataTransfer.files[0].name;
-                reader.readAsArrayBuffer(e.dataTransfer.files[0].slice());
-
-            } else {
-                alert('Not a file');
-                console.error('Not a file');
-            }
-      }
-
-      var add_player = function(title, decodedData) {
-        var id = playersIdCounter++;
-        var player = new WAAPlayer(context, decodedData, FRAME_SIZE, BUFFER_SIZE);
-        var gain = context.createGain();
-        var ui = new WAAPlayerUI(id, title, player, gain);
-        ui.removeCallback = function() {
-          player.disconnect();
-          gain.disconnect();
-          delete players[id];
-        }
-
-        players[id] = {
-          player : player,
-          gain : gain, 
-          ui : ui
-        };
-
-        player.connect(gain);
-        gain.connect(context.destination);
-      }
-
-      var dd = new DragAndDrop(document.getElementById('drag-and-drop'));
-      dd.on('drop', load_local_audio);
-
-      
-
-      // load_remote_audio('../OLA-TS.js/14. Too Long.mp3');
-      
-
-    </script>
+    <script type="text/javascript" src="recorder.js"></script>
+    <script type="text/javascript" src="app.js"></script>
   </body>
 </html>

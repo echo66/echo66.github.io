@@ -43,32 +43,33 @@ function BufferedOLA(frameSize) {
         if (sampleCounter == outputAudioBuffer.length)
           return;
 
-        do {
+        while (sampleCounter < outputAudioBuffer.length) {
 
-          var bufL = il.subarray(_position, _position + _frameSize);
-          var bufR = ir.subarray(_position, _position + _frameSize);
+			var bufL = il.subarray(_position, _position + _frameSize);
+			var bufR = ir.subarray(_position, _position + _frameSize);
 
-          if (_newAlpha != undefined && _newAlpha != _olaL.get_alpha()) {
-            _olaL.set_alpha(_newAlpha);
-            _olaR.set_alpha(_newAlpha);
-            _newAlpha = undefined;
-          }
+			if (bufL.length < _frameSize) {
+				
+			}
 
+			if (_newAlpha != undefined && _newAlpha != _olaL.get_alpha()) {
+				_olaL.set_alpha(_newAlpha);
+				_olaR.set_alpha(_newAlpha);
+				_newAlpha = undefined;
+			}
 
-          /* LEFT */
-          _olaL.process(bufL, _midBufL);
-          _olaR.process(bufR, _midBufR);
-          for (var i=sampleCounter; _midBufL.size > 0 && i < outputAudioBuffer.length; i++) {
-            ol[i] = _midBufL.shift();
-            or[i] = _midBufR.shift();
-          }
+			_olaL.process(bufL, _midBufL);
+			_olaR.process(bufR, _midBufR);
+			for (var i=sampleCounter; _midBufL.size > 0 && i < outputAudioBuffer.length; i++) {
+				ol[i] = _midBufL.shift();
+				or[i] = _midBufR.shift();
+			}
 
-          sampleCounter += _olaL.get_hs();
+			sampleCounter += _olaL.get_hs();
 
-          _position
-           += _olaL.get_ha();
+			_position += _olaL.get_ha();
 
-        } while (sampleCounter < outputAudioBuffer.length);
+        }
 	}
 
 	this.set_audio_buffer = function(newBuffer) {

@@ -25,6 +25,7 @@ function OLATS(frameSize, windowType) {
       outF.push(oSample / ((owSample<10e-3)? 1 : owSample));
       oBuf.push(0);
       owOBuf.push(0);
+      _numSamples--;
     }
 
     for (var i = 0; i < windowSize; i++) {
@@ -32,6 +33,7 @@ function OLATS(frameSize, windowType) {
       oBuf.push(inF[i] + oSample);
       owSample = owOBuf.shift();
       owOBuf.push(squaredWinF[i] + owSample);
+      _numSamples++;
     }
 
   }
@@ -244,6 +246,7 @@ function OLATS(frameSize, windowType) {
   var _windowType = "Lanczos";
   var _window;
   var _squaredFramingWindow;
+  var _numSamples = 0;
 
   this.set_alpha(1);
 
