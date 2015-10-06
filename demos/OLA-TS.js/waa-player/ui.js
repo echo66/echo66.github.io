@@ -31,7 +31,7 @@ function WAAPlayerUI(id, title, player, gain, recorder) {
     _tempoSlider.id = 'tempo-control-' + _playerId;
     _tempoSlider.name = _tempoSlider.id;
     _tempoSlider.type = 'range';
-    _tempoSlider.max = 1.5;
+    _tempoSlider.max = 2;
     _tempoSlider.min = 0.5;
     _tempoSlider.step = 0.01;
     _player.speed = 1;
