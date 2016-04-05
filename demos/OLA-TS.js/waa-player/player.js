@@ -35,14 +35,17 @@ function WAAPlayer(audioContext, audioBuffer, frameSize, bufferSize) {
   }
 
   this.play = function() {
+    this.connect(this.destination);
     _canPlay = true;
   }
 
   this.stop = function() {
     _canPlay = false;
+    this.disconnect();
   }
 
   this.connect = function(destination) {
+    this.destination = destination;
     _node.connect(destination);
   }
 
