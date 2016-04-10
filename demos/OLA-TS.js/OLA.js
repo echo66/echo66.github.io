@@ -48,13 +48,13 @@ function OLATS(frameSize, windowType) {
       } else if (_alpha <= 1.8) {
         return 2.5;
       } else {
-        return 4.0;
+        return 3.0;
       }
   }
 
   this.overlap_fn = function(alpha) {
     if (alpha < 0.9) {
-      return 1.1;
+      return 1.3;
     } else if (alpha < 1) {
       return alpha + 0.15;
     } else if (alpha >= 1 && alpha < 1.25) {

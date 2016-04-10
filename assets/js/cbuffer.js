@@ -19,11 +19,11 @@ function CBuffer() {
 	this.overflow = null;
 	// emulate Array based on passed arguments
 	if (arguments.length > 1 || typeof arguments[0] !== 'number') {
-		this.data = new Array(arguments.length);
+		this.data = new Float32Array(arguments.length);
 		this.end = (this.length = arguments.length) - 1;
 		this.push.apply(this, arguments);
 	} else {
-		this.data = new Array(arguments[0]);
+		this.data = new Float32Array(arguments[0]);
 		this.end = (this.length = arguments[0]) - 1;
 	}
 	// need to `return this` so `return CBuffer.apply` works
@@ -121,9 +121,9 @@ CBuffer.prototype = {
 	},
 	// sort items
 	sort : function (fn) {
-		this.data.sort(fn || defaultComparitor);
-		this.start = 0;
-		this.end = this.size - 1;
+		// this.data.sort(fn || defaultComparitor);
+		// this.start = 0;
+		// this.end = this.size - 1;
 		return this;
 	},
 	// add item to beginning of buffer
